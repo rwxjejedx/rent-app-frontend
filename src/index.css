@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@theme {
+  /* Fonts */
+  --font-display: 'Syne', ui-sans-serif;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui;
+
+  /* Brand Palette (Navy & Gold) */
+  --color-navy-950: hsl(222 71% 8%);
+  --color-navy-900: hsl(222 65% 13%);
+  --color-navy-800: hsl(222 58% 18%);
+  --color-navy-700: hsl(222 50% 26%);
+  
+  --color-gold-400: hsl(42 92% 62%);
+  --color-gold-500: hsl(38 88% 50%);
+
+  /* Shadcn UI Aliases - v4 automatically maps these */
+  --color-background: hsl(214 32% 97%);
+  --color-foreground: hsl(222 71% 8%);
+  --color-primary: hsl(222 65% 13%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-muted: hsl(214 28% 93%);
+  --color-muted-foreground: hsl(214 16% 50%);
+  --color-border: hsl(214 22% 88%);
+  --color-destructive: hsl(0 72% 51%);
+
+  /* Radius */
+  --radius-xl: 1.5rem;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
+}
+
+@layer base {
+  * { 
+    @apply border-border box-border; 
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans;
+  }
+  h1, h2, h3 { 
+    @apply font-display; 
+  }
+}
+
+@layer utilities {
+  .bg-navy-gradient {
+    background: linear-gradient(135deg, var(--color-navy-950) 0%, var(--color-navy-800) 100%);
+  }
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-500) 100%);
+  }
+}
