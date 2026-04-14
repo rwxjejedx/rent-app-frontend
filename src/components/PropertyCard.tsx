@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
 import { Star, MapPin, ArrowRight } from "lucide-react";
-import { type Property } from "@/lib/data";
+import { type Property, formatPrice } from "@/lib/property";
 
 interface PropertyCardProps {
   property: Property;
 }
 
 const PropertyCard = ({ property }: PropertyCardProps) => {
-  const formattedPrice = new Intl.NumberFormat("id-ID", {
-    style: "currency", currency: "IDR", maximumFractionDigits: 0,
-  }).format(property.lowestPrice);
+  const image = property.images?.[0]?.url ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop';
+  const price = property.minPrice ?? 0;
 
   return (
     <Link to={`/property/${property.id}`} className="group block">
@@ -17,25 +16,26 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
         {/* Image */}
         <div className="relative h-52 overflow-hidden">
           <img
-            src={property.image}
+            src={image}
             alt={property.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-          {/* Category badge */}
-          <span className="absolute left-3 top-3 rounded-full bg-[var(--color-gold-gradient)] px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--color-navy-950)]"
-            style={{ background: "linear-gradient(135deg, var(--color-gold-400), var(--color-gold-500))" }}>
-            {property.category}
-          </span>
+          {property.category && (
+            <span className="absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--color-navy-950)]"
+              style={{ background: "linear-gradient(135deg, var(--color-gold-400), var(--color-gold-500))" }}>
+              {property.category.name}
+            </span>
+          )}
 
-          {/* Rating badge */}
-          <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            {property.rating}
-          </span>
+          {property.avgRating && (
+            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+              {property.avgRating.toFixed(1)}
+            </span>
+          )}
         </div>
 
         {/* Content */}
@@ -51,11 +51,10 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             {property.description}
           </p>
 
-          {/* Footer */}
           <div className="flex items-end justify-between">
             <div>
               <p className="text-[10px] font-medium uppercase tracking-wider text-[var(--color-muted-fg)]">from</p>
-              <p className="text-lg font-extrabold text-[var(--color-navy-800)]">{formattedPrice}</p>
+              <p className="text-lg font-extrabold text-[var(--color-navy-800)]">{formatPrice(price)}</p>
               <p className="text-[10px] text-[var(--color-muted-fg)]">/ night</p>
             </div>
             <div className="flex items-center gap-1.5 rounded-xl border border-[var(--color-navy-800)] px-3 py-2 text-xs font-semibold text-[var(--color-navy-800)] transition-all group-hover:bg-[var(--color-navy-800)] group-hover:text-white">

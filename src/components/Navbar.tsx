@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Building2, Menu, X, User, ChevronDown, LogOut, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { role, setRole } = useAuth();
+  const { user, isAuthenticated, isUser, isTenant, logout } = useAuth();
   const dropRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -19,7 +20,12 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const roleLabel = role === "guest" ? "Guest" : role === "user" ? "My Account" : "Dashboard";
+  const handleLogout = () => {
+    logout();
+    setDropdownOpen(false);
+    setMobileOpen(false);
+    navigate('/');
+  };
 
   return (
     <nav className="bg-navy-gradient sticky top-0 z-50 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
@@ -40,19 +46,18 @@ const Navbar = () => {
           <Link to="/" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
             Home
           </Link>
-          {role === "user" && (
+          {isUser && (
             <Link to="/bookings" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
               My Bookings
             </Link>
           )}
-          {role === "tenant" && (
+          {isTenant && (
             <>
-              <Link to="/my-properties" className="text-sm font-medium text-white/70 transition-colors hover:text-white">My Properties</Link>
-              <Link to="/reservations" className="text-sm font-medium text-white/70 transition-colors hover:text-white">Reservations</Link>
+              <Link to="/dashboard/bookings" className="text-sm font-medium text-white/70 transition-colors hover:text-white">Reservations</Link>
             </>
           )}
 
-          {role === "guest" ? (
+          {!isAuthenticated ? (
             <div className="flex items-center gap-3">
               <Link to="/login"
                 className="rounded-lg px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white">
@@ -69,21 +74,33 @@ const Navbar = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white transition hover:bg-white/15"
               >
-                <User className="h-4 w-4" />
-                {roleLabel}
+                {user?.avatar
+                  ? <img src={user.avatar} className="h-6 w-6 rounded-full object-cover" />
+                  : <User className="h-4 w-4" />
+                }
+                {user?.name?.split(' ')[0] ?? 'Account'}
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
               </button>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-xl">
-                  {role === "tenant" && (
-                    <Link to="/my-properties"
+                <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-[var(--color-border)] bg-white shadow-xl">
+                  <div className="border-b border-[var(--color-border)] px-4 py-3">
+                    <p className="text-xs font-semibold text-[var(--color-foreground)]">{user?.name}</p>
+                    <p className="text-xs text-[var(--color-muted-fg)]">{user?.email}</p>
+                  </div>
+                  {isTenant && (
+                    <Link to="/dashboard"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--color-foreground)] transition hover:bg-[var(--color-muted)]">
                       <LayoutDashboard className="h-4 w-4" /> Dashboard
                     </Link>
                   )}
+                  <Link to="/profile"
+                    onClick={() => setDropdownOpen(false)}
+                    className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--color-foreground)] transition hover:bg-[var(--color-muted)]">
+                    <User className="h-4 w-4" /> Profile
+                  </Link>
                   <button
-                    onClick={() => { setRole("guest"); setDropdownOpen(false); }}
+                    onClick={handleLogout}
                     className="flex w-full items-center gap-2 px-4 py-3 text-sm text-[var(--color-destructive)] transition hover:bg-[var(--color-muted)]"
                   >
                     <LogOut className="h-4 w-4" /> Sign Out
@@ -108,20 +125,20 @@ const Navbar = () => {
         <div className="border-t border-white/10 bg-[var(--color-navy-900)] px-4 pb-5 pt-3 md:hidden">
           <div className="flex flex-col gap-1">
             <Link to="/" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">Home</Link>
-            {role === "user" && <Link to="/bookings" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">My Bookings</Link>}
-            {role === "tenant" && <>
-              <Link to="/my-properties" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">My Properties</Link>
-              <Link to="/reservations" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">Reservations</Link>
+            {isUser && <Link to="/bookings" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">My Bookings</Link>}
+            {isTenant && <>
+              <Link to="/dashboard/properties" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">My Properties</Link>
+              <Link to="/dashboard/bookings" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white">Reservations</Link>
             </>}
           </div>
           <div className="mt-4 flex gap-2 border-t border-white/10 pt-4">
-            {role === "guest" ? (
+            {!isAuthenticated ? (
               <>
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 rounded-lg border border-white/20 px-4 py-2 text-center text-sm font-medium text-white transition hover:bg-white/10">Sign In</Link>
                 <Link to="/register" onClick={() => setMobileOpen(false)} className="flex-1 rounded-lg bg-gold-gradient px-4 py-2 text-center text-sm font-semibold text-[var(--color-navy-950)]">Sign Up</Link>
               </>
             ) : (
-              <button onClick={() => { setRole("guest"); setMobileOpen(false); }} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-400 hover:bg-white/10">
+              <button onClick={handleLogout} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-400 hover:bg-white/10">
                 <LogOut className="h-4 w-4" /> Sign Out
               </button>
             )}
