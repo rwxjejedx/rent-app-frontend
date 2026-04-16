@@ -94,7 +94,7 @@ const Navbar = () => {
                       <LayoutDashboard className="h-4 w-4" /> Dashboard
                     </Link>
                   )}
-                  <Link to="/profile"
+                  <Link to="/dashboard/profile"
                     onClick={() => setDropdownOpen(false)}
                     className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--color-foreground)] transition hover:bg-[var(--color-muted)]">
                     <User className="h-4 w-4" /> Profile

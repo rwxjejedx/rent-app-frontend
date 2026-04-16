@@ -13,6 +13,7 @@ import Dashboard from "./pages/dashboard/Dashboard"; // Nama folder baru
 import CreateProperty from "./pages/dashboard/CreateProperty"; // Nama folder baru
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageProperty from "./pages/dashboard/ManageProperty"; // Halaman baru untuk edit property
+import TenantProfile from "./pages/dashboard/TenantProfile"; // Halaman baru untuk profile tenant
 
 const App = () => (
   <AuthProvider>
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/dashboard/create" element={<CreateProperty />} />
           {/* Tambahkan rute ini */}
           <Route path="/dashboard/property/:id" element={<ManageProperty />} />
+          <Route path="/dashboard/profile" element={<TenantProfile />} />
         </Route>
         
         <Route path="*" element={<NotFound />} />
