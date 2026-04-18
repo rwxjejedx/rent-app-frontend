@@ -133,30 +133,36 @@ const handleUpdateStatus = async (bookingId: number, status: 'CONFIRMED' | 'CANC
                         </div>
                       </div>
 
-                      {/* Actions for PENDING */}
-                      {isPending && (
+                      {/* Actions */}
+                      {(['WAITING_PAYMENT', 'PENDING', 'CONFIRMED'].includes(booking.status) || booking.paymentProof) && (
                         <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-[var(--color-border)] pt-4">
                           {booking.paymentProof && (
                             <a href={booking.paymentProof} target="_blank" rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 rounded-xl border border-[var(--color-border)] px-4 py-2 text-xs font-semibold text-[var(--color-muted-fg)] transition hover:bg-[var(--color-muted)]">
+                              className="flex items-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100">
                               <Eye className="h-3.5 w-3.5" /> View Payment Proof
                             </a>
                           )}
+                          
                           <div className="ml-auto flex gap-2">
-                            <button
-                              onClick={() => handleUpdateStatus(booking.id, 'CANCELLED')}
-                              disabled={isProcessing}
-                              className="flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-700 transition hover:bg-red-100 disabled:opacity-50">
-                              {isProcessing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
-                              Reject
-                            </button>
-                            <button
-                              onClick={() => handleUpdateStatus(booking.id, 'CONFIRMED')}
-                              disabled={isProcessing}
-                              className="flex items-center gap-1.5 rounded-xl bg-green-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-green-700 disabled:opacity-50">
-                              {isProcessing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
-                              Confirm
-                            </button>
+                            {['WAITING_PAYMENT', 'PENDING', 'CONFIRMED'].includes(booking.status) && (
+                              <button
+                                onClick={() => handleUpdateStatus(booking.id, 'CANCELLED')}
+                                disabled={isProcessing}
+                                className="flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-700 transition hover:bg-red-100 disabled:opacity-50">
+                                {isProcessing && processingId === booking.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
+                                {booking.status === 'CONFIRMED' ? 'Cancel Booking' : 'Reject'}
+                              </button>
+                            )}
+
+                            {booking.status === 'PENDING' && (
+                              <button
+                                onClick={() => handleUpdateStatus(booking.id, 'CONFIRMED')}
+                                disabled={isProcessing}
+                                className="flex items-center gap-1.5 rounded-xl bg-green-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-green-700 disabled:opacity-50">
+                                {isProcessing && processingId === booking.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                                Confirm
+                              </button>
+                            )}
                           </div>
                         </div>
                       )}

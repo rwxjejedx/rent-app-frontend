@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const NotificationBell = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isTenant } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -60,9 +60,14 @@ const NotificationBell = () => {
       setNotifications(prev => prev.map(notif => notif.id === n.id ? { ...notif, isRead: true } : notif));
       setUnreadCount(prev => Math.max(0, prev - 1));
     }
+
     if (n.bookingId) {
       setOpen(false);
-      navigate(`/bookings/${n.bookingId}/payment`);
+      if (isTenant) {
+        navigate('/dashboard/reservations');
+      } else {
+        navigate(`/bookings/${n.bookingId}/payment`);
+      }
     }
   };
 
