@@ -53,7 +53,7 @@ const PropertyDetail = () => {
       return;
     }
     // Navigate to booking page
-    navigate(`/booking/${property?.roomTypes?.[selectedRoomIdx]?.id}`);
+    navigate(`/booking/${property?.roomTypes?.[selectedRoomIdx]?.id}?propertyId=${id}`);
   };
 
   if (isLoading) return (

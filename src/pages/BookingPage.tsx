@@ -67,12 +67,15 @@ const BookingPage = () => {
         }
       });
       setPriceResult(res.data);
-    } catch {
-      // fallback
+    } catch (err) {
+      console.error("Price calculation failed:", err);
+      // fallback to base price if API fails
       if (roomType) {
         setPriceResult({
-          nights, totalPrice: nights * Number(roomType.basePrice),
-          basePrice: Number(roomType.basePrice), breakdown: [],
+          nights,
+          totalPrice: nights * Number(roomType.basePrice),
+          basePrice: Number(roomType.basePrice),
+          breakdown: [],
         });
       }
     } finally {
@@ -153,13 +156,15 @@ const BookingPage = () => {
                     <div className="mt-4 rounded-xl bg-slate-50 p-4">
                       <p className="text-[10px] font-black uppercase text-slate-400 mb-3 tracking-widest">Price Breakdown</p>
                       <div className="space-y-1.5 max-h-40 overflow-y-auto">
-                        {priceResult.breakdown.map(d => (
-                          <div key={d.date} className="flex items-center justify-between text-xs">
+                        {priceResult.breakdown.map((d, idx) => (
+                          <div key={d.date} 
+                            className="flex items-center justify-between text-xs animate-in fade-in slide-in-from-top-1 duration-300"
+                            style={{ animationDelay: `${idx * 50}ms` }}>
                             <span className="text-slate-500">
                               {new Date(d.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })}
                             </span>
                             <span className={`font-semibold flex items-center gap-1 ${d.isPeak ? 'text-amber-600' : 'text-slate-700'}`}>
-                              {d.isPeak && <TrendingUp size={10} />}
+                              {d.isPeak && <TrendingUp size={10} className="animate-pulse" />}
                               {fmtPrice(d.price)}
                             </span>
                           </div>

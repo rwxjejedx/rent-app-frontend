@@ -8,6 +8,7 @@ export interface Booking {
   checkOut: string;
   totalPrice: string;
   status: 'WAITING_PAYMENT' | 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
+  cancelledBy?: 'USER' | 'TENANT' | 'SYSTEM';
   paymentMethod: 'MANUAL_TRANSFER' | 'PAYMENT_GATEWAY';
   paymentProof?: string;
   paymentDeadline: string;

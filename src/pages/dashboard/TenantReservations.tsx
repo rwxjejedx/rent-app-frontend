@@ -49,8 +49,14 @@ const handleUpdateStatus = async (bookingId: number, status: 'CONFIRMED' | 'CANC
 };
 
   const statuses = ["ALL", "WAITING_PAYMENT", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
-  const filtered = filter === "ALL" ? bookings : bookings.filter(b => b.status === filter);
-  const pendingCount = bookings.filter(b => b.status === 'PENDING').length;
+  
+  // Only display CANCELLED if cancelled by TENANT or SYSTEM. Hide if cancelled by USER.
+  const displayableBookings = bookings.filter(b => 
+    b.status !== 'CANCELLED' || (b.cancelledBy === 'TENANT' || b.cancelledBy === 'SYSTEM' || !b.cancelledBy)
+  );
+  
+  const filtered = filter === "ALL" ? displayableBookings : displayableBookings.filter(b => b.status === filter);
+  const pendingCount = displayableBookings.filter(b => b.status === 'PENDING').length;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -75,7 +81,7 @@ const handleUpdateStatus = async (bookingId: number, status: 'CONFIRMED' | 'CANC
             {statuses.map(s => (
               <button key={s} onClick={() => setFilter(s)}
                 className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition ${filter === s ? 'bg-[var(--color-navy-800)] text-white' : 'border border-[var(--color-border)] text-[var(--color-muted-fg)] hover:border-[var(--color-navy-600)]'}`}>
-                {s === "ALL" ? `All (${bookings.length})` : `${statusConfig[s as keyof typeof statusConfig]?.label ?? s} ${s === 'PENDING' && pendingCount > 0 ? `(${pendingCount})` : ''}`}
+                {s === "ALL" ? `All (${displayableBookings.length})` : `${statusConfig[s as keyof typeof statusConfig]?.label ?? s} ${s === 'PENDING' && pendingCount > 0 ? `(${pendingCount})` : ''}`}
               </button>
             ))}
           </div>

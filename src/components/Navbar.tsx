@@ -44,25 +44,32 @@ const Navbar = () => {
           ) : (
             <div className="flex items-center gap-3">
               <NotificationBell />
-              <div className="relative" ref={dropRef}>
-                <button onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15">
-                  {user?.avatar ? <img src={user.avatar} className="h-6 w-6 rounded-full object-cover" /> : <User className="h-4 w-4" />}
-                  {user?.name?.split(' ')[0] ?? 'Account'}
-                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-[var(--color-border)] bg-white shadow-xl">
-                    <div className="border-b border-[var(--color-border)] px-4 py-3">
-                      <p className="text-xs font-semibold">{user?.name}</p>
-                      <p className="text-xs text-[var(--color-muted-fg)]">{user?.email}</p>
+              {isTenant ? (
+                <div className="relative" ref={dropRef}>
+                  <button onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15">
+                    {user?.avatar ? <img src={user.avatar} className="h-6 w-6 rounded-full object-cover" /> : <User className="h-4 w-4" />}
+                    {user?.name?.split(' ')[0] ?? 'Account'}
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-[var(--color-border)] bg-white shadow-xl">
+                      <div className="border-b border-[var(--color-border)] px-4 py-3">
+                        <p className="text-xs font-semibold">{user?.name}</p>
+                        <p className="text-xs text-[var(--color-muted-fg)]">{user?.email}</p>
+                      </div>
+                      <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--color-muted)]"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>
+                      <Link to="/dashboard/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--color-muted)]"><User className="h-4 w-4" /> Profile</Link>
+                      <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-3 text-sm text-[var(--color-destructive)] hover:bg-[var(--color-muted)]"><LogOut className="h-4 w-4" /> Sign Out</button>
                     </div>
-                    {isTenant && <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--color-muted)]"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>}
-                    <Link to="/dashboard/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--color-muted)]"><User className="h-4 w-4" /> Profile</Link>
-                    <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-3 text-sm text-[var(--color-destructive)] hover:bg-[var(--color-muted)]"><LogOut className="h-4 w-4" /> Sign Out</button>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              ) : (
+                <button onClick={handleLogout} className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15">
+                  <LogOut className="h-4 w-4 text-red-400" />
+                  <span>Sign Out</span>
+                </button>
+              )}
             </div>
           )}
         </div>
