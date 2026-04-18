@@ -6,6 +6,7 @@ import { bookingApi } from "@/lib/booking";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
+import PriceCalendar from "@/components/PriceCalendar";
 import { format } from "date-fns";
 import api from "@/lib/api";
 
@@ -38,7 +39,19 @@ const BookingPage = () => {
   const [roomType, setRoomType] = useState<any>(null);
   const [property, setProperty] = useState<any>(null);
   const [priceResult, setPriceResult] = useState<PriceCalcResult | null>(null);
+  const [calendarData, setCalendarData] = useState<Record<string, any>>({});
+  const [isCalendarLoading, setIsCalendarLoading] = useState(false);
   const [guest, setGuest] = useState({ guestName: "", guestNik: "", guestPhone: "", guestAddress: "" });
+
+  // Fetch calendar availability
+  useEffect(() => {
+    if (!propertyId) return;
+    setIsCalendarLoading(true);
+    api.get(`/properties/${propertyId}/calendar`)
+      .then(res => setCalendarData(res.data))
+      .catch(err => console.error("Calendar fetch error:", err))
+      .finally(() => setIsCalendarLoading(false));
+  }, [propertyId]);
 
   useEffect(() => {
     if (!isAuthenticated || !isUser) { navigate('/login'); return; }
@@ -138,10 +151,10 @@ const BookingPage = () => {
       <main className="flex-1 py-8">
         <div className="mx-auto max-w-6xl px-4">
           <div className="grid gap-8 lg:grid-cols-12">
-            
+
             {/* Main Form Area */}
             <div className="lg:col-span-8 space-y-6">
-              
+
               {/* Trip Summary Card (Mobile friendly) */}
               <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
                 <div className="flex items-start gap-4">
@@ -162,7 +175,7 @@ const BookingPage = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-6 grid grid-cols-2 gap-4 border-t border-slate-50 pt-6 md:grid-cols-4">
                   <div>
                     <p className="text-[10px] font-bold uppercase text-slate-400">Check-in</p>
@@ -191,16 +204,79 @@ const BookingPage = () => {
                       <Calendar size={18} className="text-blue-500" /> Change Dates
                     </h3>
                   </div>
+                  {/* Price & Availability Calendar */}
+                  <div className="mb-6">
+                    <div className="mb-4 flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-navy-900 flex items-center gap-2">
+                        <Calendar size={18} className="text-blue-500" /> Availability & Pricing
+                      </h3>
+                      <div className="flex gap-4">
+                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400">
+                          <div className="h-2 w-2 rounded-full bg-red-100 border border-red-300" /> Full
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400">
+                          <div className="h-2 w-2 rounded-full bg-green-100 border border-green-300" /> Available
+                        </div>
+                      </div>
+                    </div>
+
+                    {isCalendarLoading ? (
+                      <div className="flex justify-center py-10 rounded-2xl border border-slate-100 bg-white shadow-sm">
+                        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                      </div>
+                    ) : (
+                      <PriceCalendar prices={Object.entries(calendarData).map(([date, data]) => {
+                        const room = data.roomDetails?.find((r: any) => r.roomTypeId === Number(roomTypeId));
+                        return {
+                          date,
+                          price: room?.price || 0,
+                          available: room?.availableRooms > 0,
+                          isPeak: roomType && room ? room.price > Number(roomType.basePrice) : false
+                        };
+                      })} />
+                    )}
+                    <p className="mt-3 text-[10px] text-slate-400 flex items-center gap-1.5 px-1">
+                      <TrendingUp size={12} /> Colors indicate price levels (Low, Mid, Peak season). Red marked days are fully booked.
+                    </p>
+                  </div>
+
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Check-in Date</label>
                       <input type="date" min={today} className={inputBase} value={checkIn}
-                        onChange={e => { setCheckIn(e.target.value); if (checkOut <= e.target.value) setCheckOut(''); }} />
+                        onChange={e => {
+                          const isFull = calendarData[e.target.value]?.roomDetails?.find((r: any) => r.roomTypeId === Number(roomTypeId))?.availableRooms <= 0;
+                          if (isFull) {
+                            toast({ title: "Date Full", description: "This date is already fully booked.", variant: "destructive" });
+                            return;
+                          }
+                          setCheckIn(e.target.value);
+                          if (checkOut <= e.target.value) setCheckOut('');
+                        }} />
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Check-out Date</label>
                       <input type="date" min={checkIn || today} className={inputBase} value={checkOut}
-                        onChange={e => setCheckOut(e.target.value)} />
+                        onChange={e => {
+                          // Simple check for overlap with full dates
+                          if (checkIn && e.target.value) {
+                            const start = new Date(checkIn);
+                            const end = new Date(e.target.value);
+                            let hasFull = false;
+                            for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                              const dStr = d.toISOString().split('T')[0];
+                              if (calendarData[dStr]?.roomDetails?.find((r: any) => r.roomTypeId === Number(roomTypeId))?.availableRooms <= 0) {
+                                hasFull = true;
+                                break;
+                              }
+                            }
+                            if (hasFull) {
+                              toast({ title: "Range Unavailable", description: "Some dates in your selected range are already full.", variant: "destructive" });
+                              return;
+                            }
+                          }
+                          setCheckOut(e.target.value);
+                        }} />
                     </div>
                   </div>
 
@@ -209,7 +285,7 @@ const BookingPage = () => {
                       <p className="text-[10px] font-bold uppercase text-slate-400 mb-3 tracking-widest">Dynamic Pricing Details</p>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                         {priceResult.breakdown.map((d, idx) => (
-                          <div key={d.date} 
+                          <div key={d.date}
                             className={`rounded-xl p-2.5 text-center border transition-all ${d.isPeak ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'}`}
                             style={{ animationDelay: `${idx * 50}ms` }}>
                             <p className="text-[9px] font-bold text-slate-400 uppercase">
@@ -242,10 +318,10 @@ const BookingPage = () => {
                         <input type="text" maxLength={16} className={inputBase} placeholder="3201xxxxxxxxxxxx" required
                           value={guest.guestNik} onChange={e => setGuest({ ...guest, guestNik: e.target.value.replace(/\D/g, '') })} />
                         <div className="flex justify-between items-center px-1">
-                           <p className="text-[9px] text-slate-400">Must be exactly 16 digits</p>
-                           <p className={`text-[10px] font-bold ${guest.guestNik.length === 16 ? 'text-green-500' : 'text-slate-300'}`}>
+                          <p className="text-[9px] text-slate-400">Must be exactly 16 digits</p>
+                          <p className={`text-[10px] font-bold ${guest.guestNik.length === 16 ? 'text-green-500' : 'text-slate-300'}`}>
                             {guest.guestNik.length}/16
-                           </p>
+                          </p>
                         </div>
                       </div>
                       <div className="space-y-1.5">
@@ -283,13 +359,13 @@ const BookingPage = () => {
             {/* Sidebar Summary */}
             <div className="lg:col-span-4">
               <div className="sticky top-24 space-y-6">
-                
+
                 <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
                   <h3 className="text-sm font-bold text-navy-900 mb-4 pb-4 border-b border-slate-50 flex items-center justify-between">
                     Price Details
                     <CreditCard size={16} className="text-slate-300" />
                   </h3>
-                  
+
                   <div className="space-y-3">
                     {isPriceLoading ? (
                       <div className="flex flex-col items-center justify-center py-6 text-slate-400 animate-pulse">
@@ -306,7 +382,7 @@ const BookingPage = () => {
                           <span>{nights} Night{nights > 1 ? 's' : ''} x {fmtPrice(priceResult.basePrice)} base</span>
                           <span>Incl. Tax</span>
                         </div>
-                        
+
                         {hasPeakDates && (
                           <div className="flex items-center gap-2 rounded-xl bg-amber-50 p-3 text-[10px] font-bold text-amber-700">
                             <TrendingUp size={14} /> Peak season rates are currently active for some dates.

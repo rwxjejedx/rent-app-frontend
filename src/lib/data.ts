@@ -32,6 +32,7 @@ export interface DatePrice {
   date: string;
   price: number;
   available: boolean;
+  isPeak?: boolean;
 }
 
 export const CITIES = [

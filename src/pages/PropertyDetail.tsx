@@ -33,11 +33,21 @@ const PropertyDetail = () => {
     if (!id) return;
     propertyApi.getCalendar(parseInt(id), calYear, calMonth).then((calendar) => {
       const roomType = property?.roomTypes?.[selectedRoomIdx];
-      const prices: DatePrice[] = Object.values(calendar).map((day: CalendarDay) => {
-        const roomPrice = roomType
-          ? day.roomPrices.find(r => r.roomTypeId === roomType.id)?.price ?? day.minPrice ?? 0
-          : day.minPrice ?? 0;
-        return { date: day.date, price: roomPrice, available: roomPrice > 0 };
+      const prices: DatePrice[] = Object.values(calendar).map((day: any) => {
+        const room = roomType
+          ? day.roomDetails?.find((r: any) => r.roomTypeId === roomType.id)
+          : null;
+        
+        const roomPrice = room?.price ?? day.minPrice ?? 0;
+        const isAvailable = room ? room.availableRooms > 0 : !day.isFullyBooked;
+        const isPeak = roomType && room ? room.price > Number(roomType.basePrice) : false;
+
+        return { 
+          date: day.date, 
+          price: roomPrice, 
+          available: isAvailable,
+          isPeak
+        };
       });
       setCalendarPrices(prices);
     }).catch(console.error);
@@ -247,9 +257,8 @@ const PropertyDetail = () => {
                       
                       <button
                         onClick={handleBookNow}
-                        disabled={selectedRoom.isAvailable === false}
-                        className="w-full rounded-2xl bg-blue-600 py-4 text-sm font-black uppercase tracking-widest text-white shadow-lg shadow-blue-200 transition-all hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:grayscale">
-                        {selectedRoom.isAvailable === false ? 'Penuh' : 'Pesan Sekarang'}
+                        className={`w-full rounded-2xl py-4 text-sm font-black uppercase tracking-widest text-white shadow-lg transition-all active:scale-[0.98] ${selectedRoom.isAvailable === false ? 'bg-amber-500 shadow-amber-200 hover:bg-amber-600' : 'bg-blue-600 shadow-blue-200 hover:bg-blue-700'}`}>
+                        {selectedRoom.isAvailable === false ? 'Cek Ketersediaan' : 'Pesan Sekarang'}
                       </button>
                       <p className="mt-3 text-center text-[10px] font-bold text-green-600 flex items-center justify-center gap-1.5">
                          <Check size={14} /> Jaminan Harga Termurah

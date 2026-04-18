@@ -111,12 +111,15 @@ const PriceCalendar = ({ prices }: PriceCalendarProps) => {
 
             const style = getPriceStyle(info.price);
             return (
-              <div key={dateStr} className="flex flex-col items-center rounded-lg border p-1 text-center transition-transform hover:scale-105"
+              <div key={dateStr} className="group relative flex flex-col items-center rounded-lg border p-1 text-center transition-all hover:scale-105"
                 style={{ backgroundColor: style.bg, borderColor: style.border }}>
                 <span className="text-[10px] font-semibold" style={{ color: style.text }}>{day}</span>
                 <span className="text-[9px] font-bold leading-tight" style={{ color: style.text }}>
                   {formatCompact(info.price)}
                 </span>
+                {info.isPeak && (
+                  <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" title="Peak Rate" />
+                )}
               </div>
             );
           })}
