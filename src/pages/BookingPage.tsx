@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Calendar, MapPin, Loader2, ArrowLeft, User, CreditCard, Phone, Home, TrendingUp } from "lucide-react";
+import { Calendar, MapPin, Loader2, ArrowLeft, User, CreditCard, Phone, Home, TrendingUp, Check } from "lucide-react";
 import { propertyApi, formatPrice as fmtPrice } from "@/lib/property";
 import { bookingApi } from "@/lib/booking";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
+import { format } from "date-fns";
 import api from "@/lib/api";
 
 interface PriceBreakdown {
@@ -119,54 +120,104 @@ const BookingPage = () => {
   const inputBase = "w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-navy-700 focus:bg-white focus:outline-none transition-all";
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <main className="flex-1 py-10">
-        <div className="mx-auto max-w-5xl px-4">
-          <button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-navy-900 transition-colors">
-            <ArrowLeft size={16} /> Back
+    <div className="flex min-h-screen flex-col bg-[#F4F7F9]">
+      {/* Header bar */}
+      <div className="bg-white border-b border-slate-200 py-4 shadow-sm">
+        <div className="mx-auto max-w-6xl px-4 flex items-center justify-between">
+          <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-sm font-bold text-navy-700 hover:text-navy-900 transition-colors">
+            <ArrowLeft size={18} /> Review Your Trip
           </button>
-          <h1 className="text-2xl font-black text-navy-900 mb-1 tracking-tight">Complete Your Booking</h1>
-          <p className="text-slate-400 text-sm mb-8">Fill in the details below to secure your reservation.</p>
+          <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <span className="text-navy-700 border-b-2 border-navy-700 pb-1">1. Fill Details</span>
+            <span>2. Payment</span>
+            <span>3. Confirmation</span>
+          </div>
+        </div>
+      </div>
 
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* Form */}
-            <div className="lg:col-span-2 space-y-5">
-              <form onSubmit={handleSubmit} className="space-y-5">
+      <main className="flex-1 py-8">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="grid gap-8 lg:grid-cols-12">
+            
+            {/* Main Form Area */}
+            <div className="lg:col-span-8 space-y-6">
+              
+              {/* Trip Summary Card (Mobile friendly) */}
+              <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                <div className="flex items-start gap-4">
+                  <div className="h-20 w-32 shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                    {roomType?.images?.[0] ? (
+                      <img src={roomType.images[0].url} alt={roomType.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-slate-300"><Home size={24} /></div>
+                    )}
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-navy-900">{property?.name || "Loading property..."}</h2>
+                    <p className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
+                      <MapPin size={12} /> {property?.city}, {property?.location}
+                    </p>
+                    <div className="mt-2 inline-flex items-center gap-2 rounded-lg bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-700">
+                      <Home size={12} /> {roomType?.name || "Room Type"}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 grid grid-cols-2 gap-4 border-t border-slate-50 pt-6 md:grid-cols-4">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase text-slate-400">Check-in</p>
+                    <p className="mt-1 text-sm font-bold text-navy-900">{checkIn ? format(new Date(checkIn), "EEE, dd MMM yyyy") : "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase text-slate-400">Check-out</p>
+                    <p className="mt-1 text-sm font-bold text-navy-900">{checkOut ? format(new Date(checkOut), "EEE, dd MMM yyyy") : "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase text-slate-400">Duration</p>
+                    <p className="mt-1 text-sm font-bold text-navy-900">{nights} Night{nights > 1 ? 's' : ''}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase text-slate-400">Guests</p>
+                    <p className="mt-1 text-sm font-bold text-navy-900">{roomType?.capacity || 1} Person{roomType?.capacity > 1 ? 's' : ''}</p>
+                  </div>
+                </div>
+              </div>
 
-                {/* Dates */}
-                <div className="rounded-2xl bg-white border border-slate-100 p-6 shadow-sm">
-                  <h2 className="mb-5 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400">
-                    <Calendar size={14} /> Stay Dates
-                  </h2>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Date Picker Section */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-navy-900 flex items-center gap-2">
+                      <Calendar size={18} className="text-blue-500" /> Change Dates
+                    </h3>
+                  </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-400">Check-in</label>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Check-in Date</label>
                       <input type="date" min={today} className={inputBase} value={checkIn}
                         onChange={e => { setCheckIn(e.target.value); if (checkOut <= e.target.value) setCheckOut(''); }} />
                     </div>
-                    <div>
-                      <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-400">Check-out</label>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Check-out Date</label>
                       <input type="date" min={checkIn || today} className={inputBase} value={checkOut}
                         onChange={e => setCheckOut(e.target.value)} />
                     </div>
                   </div>
 
-                  {/* Price breakdown per hari */}
                   {priceResult && priceResult.breakdown.length > 0 && (
-                    <div className="mt-4 rounded-xl bg-slate-50 p-4">
-                      <p className="text-[10px] font-black uppercase text-slate-400 mb-3 tracking-widest">Price Breakdown</p>
-                      <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                    <div className="mt-6 border-t border-slate-50 pt-4">
+                      <p className="text-[10px] font-bold uppercase text-slate-400 mb-3 tracking-widest">Dynamic Pricing Details</p>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                         {priceResult.breakdown.map((d, idx) => (
                           <div key={d.date} 
-                            className="flex items-center justify-between text-xs animate-in fade-in slide-in-from-top-1 duration-300"
+                            className={`rounded-xl p-2.5 text-center border transition-all ${d.isPeak ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'}`}
                             style={{ animationDelay: `${idx * 50}ms` }}>
-                            <span className="text-slate-500">
-                              {new Date(d.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })}
-                            </span>
-                            <span className={`font-semibold flex items-center gap-1 ${d.isPeak ? 'text-amber-600' : 'text-slate-700'}`}>
-                              {d.isPeak && <TrendingUp size={10} className="animate-pulse" />}
+                            <p className="text-[9px] font-bold text-slate-400 uppercase">
+                              {new Date(d.date).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
+                            </p>
+                            <p className={`text-xs font-black mt-0.5 ${d.isPeak ? 'text-amber-700' : 'text-navy-900'}`}>
                               {fmtPrice(d.price)}
-                            </span>
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -174,111 +225,119 @@ const BookingPage = () => {
                   )}
                 </div>
 
-                {/* Guest Info */}
-                <div className="rounded-2xl bg-white border border-slate-100 p-6 shadow-sm">
-                  <h2 className="mb-5 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400">
-                    <User size={14} /> Guest Information
-                  </h2>
-                  <p className="mb-4 text-xs text-slate-400">Required for check-in identity verification.</p>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-400">Full Name (as per ID) *</label>
-                      <input type="text" className={inputBase} placeholder="Full name" required
+                {/* Guest Info Section */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                  <h3 className="text-sm font-bold text-navy-900 flex items-center gap-2 mb-6">
+                    <User size={18} className="text-blue-500" /> Contact Details
+                  </h3>
+                  <div className="space-y-5">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Full Name (According to ID)</label>
+                      <input type="text" className={inputBase} placeholder="e.g. John Doe" required
                         value={guest.guestName} onChange={e => setGuest({ ...guest, guestName: e.target.value })} />
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-400">NIK (16 digits) *</label>
-                        <input type="text" maxLength={16} className={inputBase} placeholder="1234567890123456" required
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase text-slate-400 px-1">National ID / NIK (16 Digits)</label>
+                        <input type="text" maxLength={16} className={inputBase} placeholder="3201xxxxxxxxxxxx" required
                           value={guest.guestNik} onChange={e => setGuest({ ...guest, guestNik: e.target.value.replace(/\D/g, '') })} />
-                        <p className={`mt-1 text-[10px] font-medium ${guest.guestNik.length === 16 ? 'text-green-500' : 'text-slate-400'}`}>
-                          {guest.guestNik.length}/16
-                        </p>
+                        <div className="flex justify-between items-center px-1">
+                           <p className="text-[9px] text-slate-400">Must be exactly 16 digits</p>
+                           <p className={`text-[10px] font-bold ${guest.guestNik.length === 16 ? 'text-green-500' : 'text-slate-300'}`}>
+                            {guest.guestNik.length}/16
+                           </p>
+                        </div>
                       </div>
-                      <div>
-                        <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-400">Phone Number *</label>
-                        <input type="tel" className={inputBase} placeholder="+62 812 xxxx xxxx" required
-                          value={guest.guestPhone} onChange={e => setGuest({ ...guest, guestPhone: e.target.value })} />
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Phone Number</label>
+                        <div className="relative">
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+62</span>
+                          <input type="tel" className={`${inputBase} pl-12`} placeholder="812xxxxxxx" required
+                            value={guest.guestPhone} onChange={e => setGuest({ ...guest, guestPhone: e.target.value })} />
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-400">Address *</label>
-                      <textarea className={`${inputBase} min-h-[80px] resize-none`} placeholder="Home address" required
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-slate-400 px-1">Residential Address</label>
+                      <textarea className={`${inputBase} min-h-[100px] py-4 resize-none`} placeholder="Complete address for verification" required
                         value={guest.guestAddress} onChange={e => setGuest({ ...guest, guestAddress: e.target.value })} />
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" disabled={isLoading || isPriceLoading || !priceResult}
-                  className="w-full rounded-2xl bg-navy-900 py-4 text-sm font-black uppercase tracking-widest text-white shadow-xl hover:bg-navy-800 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
-                  {isLoading
-                    ? <Loader2 className="animate-spin" size={16} />
-                    : priceResult
-                    ? `Confirm — ${fmtPrice(priceResult.totalPrice)}`
-                    : 'Select dates to continue'}
-                </button>
+                <div className="rounded-2xl bg-blue-900 p-6 text-white shadow-xl shadow-blue-200/50">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <h4 className="text-lg font-bold">Ready to secure your stay?</h4>
+                      <p className="text-sm text-blue-100/80 mt-1">Make sure all details are correct before proceeding to payment.</p>
+                    </div>
+                    <button type="submit" disabled={isLoading || isPriceLoading || !priceResult}
+                      className="shrink-0 rounded-xl bg-gold-gradient px-8 py-3.5 text-sm font-black uppercase tracking-widest text-navy-900 shadow-lg hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50 disabled:grayscale flex items-center gap-2">
+                      {isLoading ? <Loader2 className="animate-spin" size={20} /> : "Proceed to Payment"}
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
 
-            {/* Summary */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-24 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
-                {/* Property image */}
-                {property?.images?.[0] && (
-                  <img src={property.images[0].url} alt={property?.name} className="h-36 w-full object-cover" />
-                )}
-                <div className="p-5">
-                  <p className="font-bold text-navy-900">{property?.name ?? '—'}</p>
-                  <p className="flex items-center gap-1 text-xs text-slate-400 mt-1 font-medium">
-                    <MapPin size={11} /> {property?.city}
-                  </p>
-
-                  {/* Room type + image */}
-                  {roomType && (
-                    <div className="mt-4 rounded-xl overflow-hidden border border-slate-100">
-                      {roomType.images?.[0] && (
-                        <img src={roomType.images[0].url} alt={roomType.name} className="h-28 w-full object-cover" />
-                      )}
-                      <div className="p-3 bg-slate-50">
-                        <p className="text-xs font-bold text-navy-900">{roomType.name}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{roomType.capacity} guests · {fmtPrice(roomType.basePrice)}/night base</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Price summary */}
-                  <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
+            {/* Sidebar Summary */}
+            <div className="lg:col-span-4">
+              <div className="sticky top-24 space-y-6">
+                
+                <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                  <h3 className="text-sm font-bold text-navy-900 mb-4 pb-4 border-b border-slate-50 flex items-center justify-between">
+                    Price Details
+                    <CreditCard size={16} className="text-slate-300" />
+                  </h3>
+                  
+                  <div className="space-y-3">
                     {isPriceLoading ? (
-                      <div className="flex items-center gap-2 text-xs text-slate-400">
-                        <Loader2 size={12} className="animate-spin" /> Calculating price...
+                      <div className="flex flex-col items-center justify-center py-6 text-slate-400 animate-pulse">
+                        <Loader2 className="animate-spin mb-2" size={24} />
+                        <p className="text-xs font-bold uppercase">Recalculating...</p>
                       </div>
                     ) : priceResult ? (
                       <>
-                        <div className="flex justify-between text-xs">
-                          <span className="text-slate-400">Base rate</span>
-                          <span className="font-medium">{fmtPrice(priceResult.basePrice)}/night</span>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Accommodation Price</span>
+                          <span className="font-bold text-navy-900">{fmtPrice(priceResult.totalPrice)}</span>
                         </div>
-                        <div className="flex justify-between text-xs">
-                          <span className="text-slate-400">Duration</span>
-                          <span className="font-medium">{priceResult.nights} night{priceResult.nights > 1 ? 's' : ''}</span>
+                        <div className="flex justify-between text-xs text-slate-400">
+                          <span>{nights} Night{nights > 1 ? 's' : ''} x {fmtPrice(priceResult.basePrice)} base</span>
+                          <span>Incl. Tax</span>
                         </div>
+                        
                         {hasPeakDates && (
-                          <div className="flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-[10px] font-semibold text-amber-700">
-                            <TrendingUp size={11} /> Peak season pricing applies
+                          <div className="flex items-center gap-2 rounded-xl bg-amber-50 p-3 text-[10px] font-bold text-amber-700">
+                            <TrendingUp size={14} /> Peak season rates are currently active for some dates.
                           </div>
                         )}
-                        <div className="flex justify-between border-t border-slate-100 pt-2 text-sm font-black text-navy-900">
-                          <span>Total</span>
-                          <span>{fmtPrice(priceResult.totalPrice)}</span>
+
+                        <div className="mt-4 pt-4 border-t border-navy-900/5 flex items-center justify-between">
+                          <span className="text-base font-black text-navy-900">Total Payment</span>
+                          <span className="text-xl font-black text-blue-600">{fmtPrice(priceResult.totalPrice)}</span>
                         </div>
                       </>
                     ) : (
-                      <p className="text-xs text-slate-400 text-center py-2">Select dates to see pricing</p>
+                      <div className="text-center py-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Select dates to calculate</p>
+                      </div>
                     )}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100 flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+                    <Check size={24} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-navy-900">Free Cancellation</p>
+                    <p className="text-[10px] text-slate-400">Cancel for free up to 24h before check-in.</p>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </main>
