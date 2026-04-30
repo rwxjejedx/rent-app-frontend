@@ -58,7 +58,7 @@ const Login = () => {
             <Building2 className="h-7 w-7 text-navy-950" />
           </div>
           <h1 className="text-2xl font-extrabold text-white">Welcome Back</h1>
-          <p className="text-sm text-white/60">Sign in to your StayEase account</p>
+          <p className="text-sm text-white/60">Sign in to your anta.com account</p>
         </div>
 
         <div className="px-8 py-8">

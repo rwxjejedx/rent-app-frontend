@@ -128,7 +128,7 @@ const PaymentUpload = () => {
           <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-muted-fg)]">Transfer Details</h2>
           <div className="mb-5 rounded-xl bg-[var(--color-muted)] p-5 border border-[var(--color-border)]">
             <p className="text-xs font-semibold text-[var(--color-muted-fg)] uppercase">Bank Destination</p>
-            <p className="mt-1 font-bold text-[var(--color-navy-950)]">BCA — StayEase Indonesia</p>
+            <p className="mt-1 font-bold text-[var(--color-navy-950)]">BCA — anta.com Indonesia</p>
             <div className="mt-3 flex justify-between items-end">
               <div>
                 <p className="text-[10px] font-bold text-[var(--color-muted-fg)] uppercase">Account Number</p>

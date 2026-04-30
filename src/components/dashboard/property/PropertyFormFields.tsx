@@ -2,7 +2,7 @@ import { Building, MapPin } from "lucide-react";
 
 export const BasicInfoFields = ({ formData, setFormData }: any) => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <InputField label="Property Name" icon={<Building />} placeholder="Ex: StayEase Villa"
+    <InputField label="Property Name" icon={<Building />} placeholder="Ex: anta.com Villa"
       value={formData.name} onChange={(val: string) => setFormData({ ...formData, name: val })} />
     <InputField label="City" icon={<MapPin />} placeholder="Ex: Jakarta"
       value={formData.city} onChange={(val: string) => setFormData({ ...formData, city: val })} />

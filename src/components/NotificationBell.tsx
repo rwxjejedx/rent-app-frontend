@@ -4,7 +4,7 @@ import { notificationApi, type Notification } from "@/lib/booking";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-const NotificationBell = () => {
+const NotificationBell = ({ variant = 'dark' }: { variant?: 'dark' | 'light' }) => {
   const { isAuthenticated, isTenant } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -83,7 +83,11 @@ const NotificationBell = () => {
   return (
     <div className="relative" ref={ref}>
       <button onClick={handleOpen}
-        className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20">
+        className={`relative flex h-9 w-9 items-center justify-center rounded-lg transition ${
+          variant === 'dark' 
+            ? 'bg-white/10 text-white hover:bg-white/20' 
+            : 'bg-slate-50 text-slate-400 hover:text-slate-950 hover:bg-slate-100'
+        }`}>
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
           <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">

@@ -44,7 +44,7 @@ const Register = () => {
             Create an account
           </h1>
           <p className="mt-1 text-sm text-white/60">
-            Join StayEase as a {activeTab === "USER" ? "traveler" : "property owner"}
+            Join anta.com as a {activeTab === "USER" ? "traveler" : "property owner"}
           </p>
         </div>
 

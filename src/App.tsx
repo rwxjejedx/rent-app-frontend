@@ -20,6 +20,9 @@ import CreateProperty from "./pages/dashboard/CreateProperty";
 import ManageProperty from "./pages/dashboard/ManageProperty";
 import TenantProfile from "./pages/dashboard/TenantProfile";
 import TenantReservations from "./pages/dashboard/TenantReservations";
+import DashboardLayout from "./components/dashboard/DashboardLayout";
+import MyProperties from "./pages/dashboard/MyProperties";
+import { Outlet } from "react-router-dom";
 
 // Tambahkan Import Baru di Sini
 import CreateRoomType from "./pages/dashboard/CreateRoomType" // Pastikan file ini sudah dibuat
@@ -37,40 +40,44 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
         <Routes>
-          {/* --- Public Routes --- */}
-          <Route path="/" element={<Index />} />
-          <Route path="/property/:id" element={<PropertyDetail />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/set-password" element={<SetPassword />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
+          {/* --- Routes WITH Navbar (Public & User) --- */}
+          <Route element={<><Navbar /><Outlet /></>}>
+            <Route path="/" element={<Index />} />
+            <Route path="/property/:id" element={<PropertyDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/set-password" element={<SetPassword />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
 
-          {/* --- Protected User Routes --- */}
-          <Route element={<ProtectedRoute allowedRole="USER" />}>
-            <Route path="/bookings" element={<MyBookings />} />
-            <Route path="/booking/:roomTypeId" element={<BookingPage />} />
-            <Route path="/bookings/:bookingId/payment" element={<PaymentUpload />} />
+            {/* Protected User Routes */}
+            <Route element={<ProtectedRoute allowedRole="USER" />}>
+              <Route path="/bookings" element={<MyBookings />} />
+              <Route path="/booking/:roomTypeId" element={<BookingPage />} />
+              <Route path="/bookings/:bookingId/payment" element={<PaymentUpload />} />
+            </Route>
+
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
           </Route>
 
-          {/* --- Protected Tenant Routes --- */}
+          {/* --- Routes WITHOUT Navbar (Tenant Dashboard) --- */}
           <Route element={<ProtectedRoute allowedRole="TENANT" />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/profile" element={<TenantProfile />} />
-            <Route path="/dashboard/reservations" element={<TenantReservations />} />
-            
-            {/* Property Management Group */}
-            <Route path="/dashboard/create" element={<CreateProperty />} />
-            <Route path="/dashboard/property/:id" element={<ManageProperty />} />
-            <Route path="/dashboard/property/:id/room-type/create" element={<CreateRoomType />} />
-            <Route path="/dashboard/property/:id/availability" element={<ManageAvailability />} />
-            <Route path="/dashboard/property/:propertyId/room-type/:roomTypeId/rooms" element={<ManageRooms />} />
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/properties" element={<MyProperties />} />
+              <Route path="/dashboard/profile" element={<TenantProfile />} />
+              <Route path="/dashboard/reservations" element={<TenantReservations />} />
+              
+              {/* Property Management Group */}
+              <Route path="/dashboard/create" element={<CreateProperty />} />
+              <Route path="/dashboard/property/:id" element={<ManageProperty />} />
+              <Route path="/dashboard/property/:id/room-type/create" element={<CreateRoomType />} />
+              <Route path="/dashboard/property/:id/availability" element={<ManageAvailability />} />
+              <Route path="/dashboard/property/:propertyId/room-type/:roomTypeId/rooms" element={<ManageRooms />} />
+            </Route>
           </Route>
-
-          {/* 404 Route */}
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
