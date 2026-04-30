@@ -83,24 +83,35 @@ const SearchForm = ({ onSearch }: SearchFormProps) => {
         <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-[var(--color-muted-fg)]">Search Properties</p>
         <div className="grid gap-3 md:grid-cols-5 md:gap-4">
 
-          {/* City dropdown */}
+          {/* City Autocomplete */}
           <div className="relative md:col-span-1" ref={cityRef}>
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-[var(--color-muted-fg)]">
               <MapPin className="h-3.5 w-3.5" /> Destination
             </label>
-            <button onClick={() => setCityOpen(!cityOpen)}
-              className={`${inputBase} flex items-center justify-between text-left ${!city ? "text-[var(--color-muted-fg)]" : ""}`}>
-              <span>{city || "Select city"}</span>
-              <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${cityOpen ? "rotate-180" : ""}`} />
-            </button>
+            <div className="relative">
+              <input
+                type="text"
+                value={city}
+                onChange={e => { setCity(e.target.value); setCityOpen(true); }}
+                onFocus={() => setCityOpen(true)}
+                placeholder="Where are you going?"
+                className={`${inputBase} ${cityOpen ? "rounded-b-none" : ""}`}
+              />
+              <Search className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-muted-fg)]" />
+            </div>
+            
             {cityOpen && (
-              <div className="absolute top-full left-0 z-50 mt-1 max-h-52 w-full overflow-y-auto rounded-xl border border-[var(--color-border)] bg-white shadow-xl">
-                {CITIES.map(c => (
+              <div className="absolute top-full left-0 z-50 max-h-64 w-full overflow-y-auto rounded-b-2xl border-x border-b border-[var(--color-border)] bg-white shadow-2xl animate-in fade-in slide-in-from-top-1 duration-200">
+                {CITIES.filter(c => c.toLowerCase().includes(city.toLowerCase())).map(c => (
                   <button key={c} onClick={() => { setCity(c); setCityOpen(false); }}
-                    className={`w-full px-4 py-2.5 text-left text-sm transition hover:bg-[var(--color-muted)] ${c === city ? "font-semibold text-[var(--color-navy-800)]" : "text-[var(--color-foreground)]"}`}>
-                    {c}
+                    className={`w-full px-4 py-3 text-left text-sm transition hover:bg-[var(--color-muted)] flex items-center gap-3 ${c === city ? "bg-[var(--color-muted)] font-bold text-[var(--color-navy-800)]" : "text-[var(--color-foreground)]"}`}>
+                    <MapPin className="h-3.5 w-3.5 text-[var(--color-muted-fg)]" />
+                    <span>{c}</span>
                   </button>
                 ))}
+                {CITIES.filter(c => c.toLowerCase().includes(city.toLowerCase())).length === 0 && (
+                  <div className="px-4 py-3 text-xs text-[var(--color-muted-fg)] italic">No cities found matching "{city}"</div>
+                )}
               </div>
             )}
           </div>

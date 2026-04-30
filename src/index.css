@@ -1,35 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
-
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 @theme {
   /* Fonts */
-  --font-display: 'Syne', ui-sans-serif;
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui;
+  --font-display: 'Bebas Neue', cursive;
+  --font-sans: 'Poppins', ui-sans-serif, system-ui;
 
-  /* Brand Palette (Navy & Gold) */
-  --color-navy-950: hsl(222 71% 8%);
-  --color-navy-900: hsl(222 65% 13%);
-  --color-navy-800: hsl(222 58% 18%);
-  --color-navy-700: hsl(222 50% 26%);
+  /* Brand Palette (Sophisticated Dark & Gold) */
+  --color-navy-950: hsl(224 71% 4%);
+  --color-navy-900: hsl(224 64% 10%);
+  --color-navy-800: hsl(224 58% 15%);
+  --color-navy-700: hsl(224 50% 22%);
+  --color-navy-600: hsl(224 40% 30%);
   
-  --color-gold-400: hsl(42 92% 62%);
-  --color-gold-500: hsl(38 88% 50%);
+  --color-gold-400: hsl(45 92% 60%);
+  --color-gold-500: hsl(45 88% 48%);
+  --color-gold-600: hsl(45 88% 38%);
 
-  /* Shadcn UI Aliases - v4 automatically maps these */
-  --color-background: hsl(214 32% 97%);
-  --color-foreground: hsl(222 71% 8%);
-  --color-primary: hsl(222 65% 13%);
+  /* Shadcn UI Aliases & Standard Mappings */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(224 71% 4%);
+  --color-primary: hsl(224 64% 10%);
   --color-primary-foreground: hsl(0 0% 100%);
-  --color-muted: hsl(214 28% 93%);
-  --color-muted-foreground: hsl(214 16% 50%);
-  --color-border: hsl(214 22% 88%);
-  --color-destructive: hsl(0 72% 51%);
+  --color-muted: hsl(220 14% 96%);
+  --color-muted-foreground: hsl(220 9% 46%);
+  --color-border: hsl(220 13% 91%);
+  --color-destructive: hsl(0 84% 60%);
+
+  /* Custom Aliases for legacy compatibility */
+  --color-muted-fg: var(--color-muted-foreground);
+  --color-primary-fg: var(--color-primary-foreground);
 
   /* Radius */
-  --radius-xl: 1.5rem;
-  --radius-lg: 1rem;
-  --radius-md: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
 }
 
 @layer base {
@@ -37,18 +43,31 @@
     @apply border-border box-border; 
   }
   body {
-    @apply bg-background text-foreground antialiased font-sans;
+    @apply bg-background text-foreground antialiased font-sans selection:bg-gold-400/30;
   }
-  h1, h2, h3 { 
-    @apply font-display; 
+  h1, h2, h3, h4, h5, h6 { 
+    @apply font-display tracking-wider uppercase; 
   }
+  h1 { @apply text-4xl md:text-6xl; }
+  h2 { @apply text-3xl md:text-5xl; }
+  h3 { @apply text-2xl md:text-4xl; }
 }
 
 @layer utilities {
+  .bg-glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
   .bg-navy-gradient {
     background: linear-gradient(135deg, var(--color-navy-950) 0%, var(--color-navy-800) 100%);
   }
   .bg-gold-gradient {
     background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-500) 100%);
+  }
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-500) 100%);
+  }
+  .shadow-premium {
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1), 0 10px 20px -10px rgba(0, 0, 0, 0.05);
   }
 }
