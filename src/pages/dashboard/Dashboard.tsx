@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { 
-  Building2, 
-  CalendarCheck, 
-  Clock, 
-  TrendingUp, 
-  Plus, 
+import {
+  Building2,
+  CalendarCheck,
+  Clock,
+  TrendingUp,
+  Plus,
   ChevronRight,
   ArrowUpRight
 } from "lucide-react";
@@ -18,7 +18,7 @@ const Dashboard = () => {
     queryKey: ["my-properties"],
     queryFn: async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:3000/api/v1/properties/tenant/my-listings", {
+      const res = await axios.get("https://rent-app-backend-production-d854.up.railway.app/api/v1/properties/tenant/my-listings", {
         headers: { Authorization: `Bearer ${token}` }
       });
       return res.data;
@@ -56,7 +56,7 @@ const Dashboard = () => {
     { label: "Estimated Revenue", value: formatPrice(totalRevenue), icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50" },
   ];
 
-  const recentBookings = [...bookings].sort((a: any, b: any) => 
+  const recentBookings = [...bookings].sort((a: any, b: any) =>
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   ).slice(0, 5);
 
@@ -68,8 +68,8 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-slate-950">Overview</h1>
           <p className="text-slate-500 mt-1 font-medium">Manage your rental business performance and activity.</p>
         </div>
-        <Link 
-          to="/dashboard/create" 
+        <Link
+          to="/dashboard/create"
           className="flex items-center gap-2 bg-slate-950 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl shadow-slate-200 hover:scale-105 active:scale-95 transition-all"
         >
           <Plus size={18} />
@@ -158,13 +158,13 @@ const Dashboard = () => {
           <h3 className="text-lg font-bold text-slate-950">Active Properties</h3>
           <div className="space-y-4">
             {properties.slice(0, 4).map((p: any) => (
-              <Link 
-                key={p.id} 
+              <Link
+                key={p.id}
                 to={`/dashboard/property/${p.id}`}
                 className="flex items-center gap-4 group"
               >
-                <img 
-                  src={p.images?.[0]?.url || "/placeholder.jpg"} 
+                <img
+                  src={p.images?.[0]?.url || "/placeholder.jpg"}
                   className="w-12 h-12 rounded-xl object-cover border border-slate-100 shadow-sm"
                   alt={p.name}
                 />

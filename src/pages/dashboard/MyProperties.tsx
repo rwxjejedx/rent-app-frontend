@@ -8,7 +8,7 @@ const MyProperties = () => {
     queryKey: ["my-properties"],
     queryFn: async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:3000/api/v1/properties/tenant/my-listings", {
+      const res = await axios.get("https://rent-app-backend-production-d854.up.railway.app/api/v1/properties/tenant/my-listings", {
         headers: { Authorization: `Bearer ${token}` }
       });
       return res.data;
@@ -32,8 +32,8 @@ const MyProperties = () => {
           <h1 className="text-3xl font-bold text-slate-950">My Properties</h1>
           <p className="text-slate-500 mt-1 font-medium">You have {propertyList.length} active listings</p>
         </div>
-        <Link 
-          to="/dashboard/create" 
+        <Link
+          to="/dashboard/create"
           className="flex items-center gap-2 bg-slate-950 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl shadow-slate-200 hover:scale-105 active:scale-95 transition-all"
         >
           <Plus size={18} />
@@ -57,24 +57,24 @@ const MyProperties = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {propertyList.map((p: any) => (
-            <Link 
-              key={p.id} 
-              to={`/dashboard/property/${p.id}`} 
+            <Link
+              key={p.id}
+              to={`/dashboard/property/${p.id}`}
               className="group bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500"
             >
               <div className="relative h-56 w-full overflow-hidden">
                 <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-950 shadow-sm">
                   {p.category?.name || "Property"}
                 </div>
-                <img 
-                  src={p.images?.[0]?.url || "/placeholder.jpg"} 
-                  className="object-cover w-full h-full transition duration-700 group-hover:scale-110" 
-                  alt={p.name} 
+                <img
+                  src={p.images?.[0]?.url || "/placeholder.jpg"}
+                  className="object-cover w-full h-full transition duration-700 group-hover:scale-110"
+                  alt={p.name}
                 />
                 <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                   <div className="bg-white p-3 rounded-full text-slate-950 shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform">
-                      <ChevronRight size={24} />
-                   </div>
+                  <div className="bg-white p-3 rounded-full text-slate-950 shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform">
+                    <ChevronRight size={24} />
+                  </div>
                 </div>
               </div>
               <div className="p-6">
@@ -83,7 +83,7 @@ const MyProperties = () => {
                   <MapPin size={12} />
                   <span>{p.city}</span>
                 </div>
-                
+
                 <div className="flex justify-between items-center pt-5 border-t border-slate-50">
                   <div className="flex flex-col">
                     <span className="text-[10px] uppercase font-black text-slate-300 tracking-widest">Units</span>
