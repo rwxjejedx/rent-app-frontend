@@ -25,7 +25,7 @@ const Navbar = () => {
     <nav className="bg-white sticky top-0 z-50 border-b border-slate-100 shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center gap-2.5">
-          <img src="/src/assets/full-logo.png" className="h-9 w-auto" alt="anta.com logo" />
+          <img src="/public/full-logo.png" className="h-9 w-auto" alt="anta.com logo" />
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">
@@ -89,7 +89,7 @@ const Navbar = () => {
           <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-6">
             {!isAuthenticated ? (
               <><Link to="/login" onClick={() => setMobileOpen(false)} className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-bold text-slate-950">Sign In</Link>
-              <Link to="/register" onClick={() => setMobileOpen(false)} className="rounded-xl bg-slate-950 px-4 py-3 text-center text-sm font-bold text-white shadow-lg shadow-slate-200">Sign Up</Link></>
+                <Link to="/register" onClick={() => setMobileOpen(false)} className="rounded-xl bg-slate-950 px-4 py-3 text-center text-sm font-bold text-white shadow-lg shadow-slate-200">Sign Up</Link></>
             ) : (
               <button onClick={handleLogout} className="flex items-center justify-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-600"><LogOut className="h-4 w-4" /> Sign Out</button>
             )}
