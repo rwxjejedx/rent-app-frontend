@@ -40,7 +40,7 @@ export const authApi = {
   },
 
   googleLogin: (role: 'user' | 'tenant') => {
-    window.location.href = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1'}/auth/google?role=${role}`;
+    window.location.href = `${import.meta.env.VITE_API_URL ?? 'https://rent-app-backend-production-d854.up.railway.app/api/v1'}/auth/google?role=${role}`;
   },
 };
 

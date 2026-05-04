@@ -1,10 +1,10 @@
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Building, 
-  CalendarCheck, 
-  User, 
-  LogOut, 
+import {
+  LayoutDashboard,
+  Building,
+  CalendarCheck,
+  User,
+  LogOut,
   Building2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -33,7 +33,7 @@ const DashboardLayout = () => {
       <aside className="w-64 border-r border-slate-100 flex flex-col fixed inset-y-0 z-20 bg-white">
         <div className="p-8">
           <Link to="/" className="flex items-center gap-2.5">
-            <img src="/src/assets/full-logo.png" className="h-9 w-auto" alt="anta.com logo" />
+            <img src="/full-logo.png" className="h-9 w-auto" alt="anta.com logo" />
           </Link>
         </div>
 
@@ -44,11 +44,10 @@ const DashboardLayout = () => {
               <Link
                 key={item.label}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  isActive 
-                    ? "bg-slate-950 text-white shadow-lg shadow-slate-200" 
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive
+                    ? "bg-slate-950 text-white shadow-lg shadow-slate-200"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-950"
-                }`}
+                  }`}
               >
                 <item.icon className={`h-5 w-5 ${isActive ? "text-white" : "text-slate-400"}`} />
                 {item.label}
@@ -75,7 +74,7 @@ const DashboardLayout = () => {
 
           <div className="flex items-center gap-4">
             <div className="relative">
-               <NotificationBell variant="light" />
+              <NotificationBell variant="light" />
             </div>
             <div className="h-8 w-px bg-slate-100 mx-2" />
             <div className="flex items-center gap-3">
