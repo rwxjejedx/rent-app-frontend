@@ -8,7 +8,7 @@ const Footer = () => (
         {/* Brand */}
         <div className="md:col-span-1">
           <div className="mb-6 flex items-center gap-2.5">
-            <img src="/src/assets/full-logo.png" className="h-10 w-auto" alt="anta.com logo" />
+            <img src="/full-logo.png" className="h-10 w-auto" alt="anta.com" />
           </div>
           <p className="text-sm leading-relaxed text-slate-500 font-medium">
             Your trusted platform for discovering the perfect rental property across Indonesia.

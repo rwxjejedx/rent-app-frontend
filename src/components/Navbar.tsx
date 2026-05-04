@@ -25,7 +25,7 @@ const Navbar = () => {
     <nav className="bg-white sticky top-0 z-50 border-b border-slate-100 shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center gap-2.5">
-          <img src="/public/full-logo.png" className="h-9 w-auto" alt="anta.com logo" />
+          <img src="/full-logo.png" className="h-9 w-auto" alt="anta.com" />
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">
