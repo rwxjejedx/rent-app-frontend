@@ -103,8 +103,8 @@ const ManageProperty = () => {
             exit={{ opacity: 0, y: -10 }}
             className="grid lg:grid-cols-2 gap-8"
           >
-            {property?.room_types?.length > 0 ? (
-              property.room_types.map((rt: any) => (
+            {property?.roomTypes?.length > 0 ? (
+              property.roomTypes.map((rt: any) => (
                 <div key={rt.id} className="bg-white border border-slate-100 p-8 rounded-[2.5rem] hover:shadow-xl hover:shadow-slate-100/50 transition-all duration-500 group">
                   <div className="flex justify-between items-start mb-6">
                     <div className="bg-slate-50 p-4 rounded-2xl text-slate-400 group-hover:bg-slate-950 group-hover:text-white transition-colors duration-500">
