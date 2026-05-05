@@ -14,7 +14,7 @@ const SetPassword = () => {
     e.preventDefault();
     try {
       // Di sinilah VERIFY terjadi (POST ke Backend)
-      await axios.post("http://localhost:3000/api/v1/auth/verify", {
+      await axios.post("https://rent-app-backend-production-d854.up.railway.app/api/v1/auth/verify", {
         token,
         role,
         password // Password baru dari input user
@@ -31,8 +31,8 @@ const SetPassword = () => {
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 rounded-xl border bg-white p-8 shadow-lg">
         <h2 className="text-xl font-bold font-display">Set Your Password</h2>
         <p className="text-sm text-muted-foreground">Please enter a new password for your {role} account.</p>
-        <input 
-          type="password" 
+        <input
+          type="password"
           className="w-full rounded-lg border border-border p-3 focus:outline-none focus:ring-2 focus:ring-navy-700/20"
           placeholder="New Password"
           value={password}
