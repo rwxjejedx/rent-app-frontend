@@ -1,4 +1,5 @@
 import { Building2, Mail, Phone, Instagram, Twitter, Facebook } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => (
   <footer className="bg-white border-t border-slate-100 text-slate-600">
@@ -8,7 +9,9 @@ const Footer = () => (
         {/* Brand */}
         <div className="md:col-span-1">
           <div className="mb-6 flex items-center gap-2.5">
-            <img src="/full-logo.png" className="h-10 w-auto" alt="anta.com" />
+            <Link to="/" className="flex items-center gap-2.5">
+              <img src="/full-logo.png" className="h-9 w-auto" alt="anta.com" />
+            </Link>
           </div>
           <p className="text-sm leading-relaxed text-slate-500 font-medium">
             Your trusted platform for discovering the perfect rental property across Indonesia.
@@ -52,20 +55,13 @@ const Footer = () => (
           <ul className="space-y-4 text-sm font-medium text-slate-500">
             <li className="flex items-center gap-3">
               <Mail className="h-4 w-4 shrink-0 text-slate-400" />
-              hello@anta.com.id
+              hello@anta.com
             </li>
             <li className="flex items-center gap-3">
               <Phone className="h-4 w-4 shrink-0 text-slate-400" />
-              +62 21 1234 5678
+              +62 812 9730 8567
             </li>
           </ul>
-          <div className="mt-8 rounded-2xl bg-slate-50 p-5 border border-slate-100">
-            <p className="text-xs font-bold text-slate-950">List your property</p>
-            <p className="mt-1 text-xs text-slate-500 font-medium">Join 10,000+ landlords on anta.com</p>
-            <button className="mt-4 w-full rounded-xl bg-slate-950 py-3 text-xs font-bold text-white shadow-lg shadow-slate-200 transition-all hover:scale-105 active:scale-95">
-              Become a Tenant
-            </button>
-          </div>
         </div>
       </div>
 

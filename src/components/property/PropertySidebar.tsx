@@ -17,7 +17,6 @@ const PropertySidebar = ({ calendarPrices, selectedRoom, handleBookNow }: Proper
           {calendarPrices.length > 0 && <PriceCalendar prices={calendarPrices} />}
           <BookingAction selectedRoom={selectedRoom} handleBookNow={handleBookNow} />
         </div>
-        <PopularityBadge />
       </div>
     </div>
   );
@@ -36,7 +35,6 @@ const BookingAction = ({ selectedRoom, handleBookNow }: any) => {
     <div className="mt-8 border-t border-slate-50 pt-6">
       <PriceDisplay price={selectedRoom.effectivePrice ?? selectedRoom.basePrice} />
       <BookButton isAvailable={selectedRoom.isAvailable} onClick={handleBookNow} />
-      <PriceGuarantee />
     </div>
   );
 };
@@ -60,23 +58,5 @@ const BookButton = ({ isAvailable, onClick }: any) => {
     </button>
   );
 };
-
-const PriceGuarantee = () => (
-  <p className="mt-3 text-center text-[10px] font-bold text-green-600 flex items-center justify-center gap-1.5">
-    <Check size={14} /> Jaminan Harga Termurah
-  </p>
-);
-
-const PopularityBadge = () => (
-  <div className="rounded-2xl bg-blue-900 p-6 text-white shadow-xl shadow-blue-900/20 flex items-center gap-4">
-    <div className="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center text-white">
-      <TrendingUp size={24} />
-    </div>
-    <div>
-      <p className="text-xs font-black">Lagi Populer!</p>
-      <p className="text-[10px] text-blue-100/60 mt-0.5">Banyak yang melihat akomodasi ini dalam 24 jam terakhir.</p>
-    </div>
-  </div>
-);
 
 export default PropertySidebar;
