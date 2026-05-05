@@ -32,7 +32,7 @@ const MiniCalendar = ({ selected, onSelect, onClose }: { selected?: Date; onSele
         </button>
       </div>
       <div className="mb-1 grid grid-cols-7 gap-0.5 text-center text-[10px] font-semibold text-[var(--color-muted-fg)]">
-        {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <div key={d}>{d}</div>)}
+        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => <div key={d}>{d}</div>)}
       </div>
       <div className="grid grid-cols-7 gap-0.5">
         {Array.from({ length: startDay }).map((_, i) => <div key={`e${i}`} />)}
@@ -99,7 +99,7 @@ const SearchForm = ({ onSearch }: SearchFormProps) => {
               />
               <Search className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-muted-fg)]" />
             </div>
-            
+
             {cityOpen && (
               <div className="absolute top-full left-0 z-50 max-h-64 w-full overflow-y-auto rounded-b-2xl border-x border-b border-[var(--color-border)] bg-white shadow-2xl animate-in fade-in slide-in-from-top-1 duration-200">
                 {CITIES.filter(c => c.toLowerCase().includes(city.toLowerCase())).map(c => (
@@ -110,7 +110,7 @@ const SearchForm = ({ onSearch }: SearchFormProps) => {
                   </button>
                 ))}
                 {CITIES.filter(c => c.toLowerCase().includes(city.toLowerCase())).length === 0 && (
-                  <div className="px-4 py-3 text-xs text-[var(--color-muted-fg)] italic">No cities found matching "{city}"</div>
+                  <div className="px-4 py-3 text-xs text-[var(--color-muted-fg)] italic">Search for "{city}"</div>
                 )}
               </div>
             )}
