@@ -128,11 +128,11 @@ const PaymentUpload = () => {
           <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-muted-fg)]">Transfer Details</h2>
           <div className="mb-5 rounded-xl bg-[var(--color-muted)] p-5 border border-[var(--color-border)]">
             <p className="text-xs font-semibold text-[var(--color-muted-fg)] uppercase">Bank Destination</p>
-            <p className="mt-1 font-bold text-[var(--color-navy-950)]">BCA — anta.com Indonesia</p>
+            <p className="mt-1 font-bold text-[var(--color-navy-950)]">BCA — PT Anta Jaya Mandiri</p>
             <div className="mt-3 flex justify-between items-end">
               <div>
                 <p className="text-[10px] font-bold text-[var(--color-muted-fg)] uppercase">Account Number</p>
-                <p className="text-lg font-black tracking-tighter text-[var(--color-foreground)]">1234 5678 90</p>
+                <p className="text-lg font-black tracking-tighter text-[var(--color-foreground)]">6730381464</p>
               </div>
               <div className="text-right">
                 <p className="text-[10px] font-bold text-[var(--color-muted-fg)] uppercase">Amount to Pay</p>
@@ -144,20 +144,20 @@ const PaymentUpload = () => {
           <label className={`block cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-all ${file ? 'border-[var(--color-gold-500)] bg-gold-400/5' : 'border-[var(--color-border)] hover:border-[var(--color-navy-700)] hover:bg-[var(--color-muted)]'}`}>
             {preview
               ? <div className="relative group">
-                  <img src={preview} alt="Preview" className="mx-auto max-h-48 rounded-xl object-contain shadow-md" />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
-                    <p className="text-white text-xs font-bold">Change Image</p>
-                  </div>
+                <img src={preview} alt="Preview" className="mx-auto max-h-48 rounded-xl object-contain shadow-md" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
+                  <p className="text-white text-xs font-bold">Change Image</p>
                 </div>
+              </div>
               : <div className="flex flex-col items-center gap-3">
-                  <div className="rounded-full bg-[var(--color-muted)] p-4">
-                    <ImageIcon className="h-6 w-6 text-[var(--color-navy-700)]" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-[var(--color-foreground)]">Upload Payment Receipt</p>
-                    <p className="text-xs text-[var(--color-muted-fg)] mt-1">JPG or PNG (max 1MB)</p>
-                  </div>
-                </div>}
+                <div className="rounded-full bg-[var(--color-muted)] p-4">
+                  <ImageIcon className="h-6 w-6 text-[var(--color-navy-700)]" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[var(--color-foreground)]">Upload Payment Receipt</p>
+                  <p className="text-xs text-[var(--color-muted-fg)] mt-1">JPG or PNG (max 1MB)</p>
+                </div>
+              </div>}
             <input type="file" className="hidden" accept="image/jpeg,image/png" onChange={handleFileChange} />
           </label>
 
