@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { 
-  Bed, Plus, Calendar, Settings, ChevronRight, 
-  LayoutGrid, Loader2, MapPin, Star, ArrowLeft 
+import {
+  Bed, Plus, Calendar, Settings, ChevronRight,
+  LayoutGrid, Loader2, MapPin, Star, ArrowLeft
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -17,7 +17,7 @@ const ManageProperty = () => {
   const { data: property, isLoading } = useQuery({
     queryKey: ["property-detail", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/api/v1/properties/${id}`, {
+      const res = await axios.get(`https://rent-app-backend-production-d854.up.railway.app/api/v1/properties/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return res.data;
@@ -38,7 +38,7 @@ const ManageProperty = () => {
       {/* Header & Navigation */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <button 
+          <button
             onClick={() => navigate("/dashboard")}
             className="flex items-center gap-2 text-slate-400 hover:text-slate-950 transition-colors text-xs font-bold mb-4 uppercase tracking-widest"
           >
@@ -52,24 +52,24 @@ const ManageProperty = () => {
               <MapPin size={14} className="text-slate-400" /> {property?.city}
             </span>
             <span className="flex items-center gap-1.5 text-sm">
-              <Star size={14} className="text-amber-400 fill-amber-400" /> 
+              <Star size={14} className="text-amber-400 fill-amber-400" />
               {property?.avgRating ? Number(property.avgRating).toFixed(1) : "New Listing"}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={() => navigate(`/dashboard/property/${id}/edit`)}
             className="p-3 bg-white border border-slate-100 rounded-2xl text-slate-950 hover:bg-slate-50 transition-all shadow-sm"
           >
             <Settings size={20} />
           </button>
-          <button 
+          <button
             onClick={() => navigate(`/dashboard/property/${id}/room-type/create`)}
             className="group flex items-center gap-3 bg-slate-950 text-white px-6 py-3.5 rounded-2xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-slate-200"
           >
-            <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" /> 
+            <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
             Add Room Type
           </button>
         </div>
@@ -79,17 +79,15 @@ const ManageProperty = () => {
       <div className="flex gap-2 p-1.5 bg-slate-50 w-fit rounded-2xl">
         <button
           onClick={() => setActiveTab("rooms")}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
-            activeTab === "rooms" ? "bg-white text-slate-950 shadow-sm" : "text-slate-400 hover:text-slate-600"
-          }`}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "rooms" ? "bg-white text-slate-950 shadow-sm" : "text-slate-400 hover:text-slate-600"
+            }`}
         >
           <LayoutGrid size={16} /> Units & Categories
         </button>
         <button
           onClick={() => setActiveTab("availability")}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
-            activeTab === "availability" ? "bg-white text-slate-950 shadow-sm" : "text-slate-400 hover:text-slate-600"
-          }`}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "availability" ? "bg-white text-slate-950 shadow-sm" : "text-slate-400 hover:text-slate-600"
+            }`}
         >
           <Calendar size={16} /> Smart Calendar
         </button>
@@ -98,7 +96,7 @@ const ManageProperty = () => {
       {/* Tab Content */}
       <AnimatePresence mode="wait">
         {activeTab === "rooms" ? (
-          <motion.div 
+          <motion.div
             key="rooms"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -117,10 +115,10 @@ const ManageProperty = () => {
                       <p className="text-xl font-bold text-slate-950">Rp {Number(rt.basePrice).toLocaleString('id-ID')}</p>
                     </div>
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-slate-950 mb-2">{rt.name}</h3>
                   <p className="text-slate-500 text-sm font-medium mb-8 line-clamp-2 leading-relaxed">{rt.description}</p>
-                  
+
                   <div className="flex items-center justify-between pt-6 border-t border-slate-50">
                     <div className="flex gap-4">
                       <div className="text-center">
@@ -132,7 +130,7 @@ const ManageProperty = () => {
                         <p className="font-bold text-slate-950">{rt.rooms?.length || 0} Rooms</p>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => navigate(`/dashboard/property/${id}/room-type/${rt.id}/rooms`)}
                       className="bg-slate-50 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-slate-600 hover:bg-slate-950 hover:text-white transition-all duration-300"
                     >
@@ -147,9 +145,9 @@ const ManageProperty = () => {
                   <Bed className="text-slate-300" size={24} />
                 </div>
                 <p className="text-slate-400 font-bold mb-4">No room types configured yet.</p>
-                <button 
-                   onClick={() => navigate(`/dashboard/property/${id}/room-type/create`)}
-                   className="bg-slate-950 text-white px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all"
+                <button
+                  onClick={() => navigate(`/dashboard/property/${id}/room-type/create`)}
+                  className="bg-slate-950 text-white px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all"
                 >
                   Create First Room Type
                 </button>
@@ -157,7 +155,7 @@ const ManageProperty = () => {
             )}
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             key="availability"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -169,10 +167,10 @@ const ManageProperty = () => {
             </div>
             <h3 className="text-3xl font-bold text-slate-950 mb-4 tracking-tight">Dynamic Rates & Availability</h3>
             <p className="text-slate-500 text-sm max-w-md mx-auto mb-12 font-medium leading-relaxed">
-              Adjust your pricing based on seasons or block dates for maintenance. 
+              Adjust your pricing based on seasons or block dates for maintenance.
               Our Smart Calendar helps you maximize revenue during peak periods.
             </p>
-            <button 
+            <button
               onClick={() => navigate(`/dashboard/property/${id}/availability`)}
               className="bg-slate-950 text-white px-12 py-5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-slate-200 hover:scale-105 transition-transform"
             >
